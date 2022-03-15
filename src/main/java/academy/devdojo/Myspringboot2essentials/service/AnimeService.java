@@ -38,4 +38,17 @@ public class AnimeService {
 		animes.add(animeBody);
 		return animeBody;
 	}
+	
+	public void delete(long id) {
+		Anime animeReturn = findById(id);
+		animes.remove(animeReturn);
+		
+	}
+
+	public void replace(Anime animeBody) {
+		
+		animes.removeIf(anime -> anime.getId().equals(animeBody.getId()));
+		
+		animes.add(animeBody);
+	}
 }
