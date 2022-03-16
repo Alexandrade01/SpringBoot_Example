@@ -1,54 +1,54 @@
 package academy.devdojo.Myspringboot2essentials.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import academy.devdojo.Myspringboot2essentials.domain.Anime;
+import academy.devdojo.Myspringboot2essentials.repository.AnimeRepository;
+import academy.devdojo.Myspringboot2essentials.request.AnimePostRequestBodyDTO;
+import academy.devdojo.Myspringboot2essentials.request.AnimePutRequestBodyDTO;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class AnimeService {
 	
-	private final List<Anime> animes = new ArrayList<>
-	(
-		List.of(new Anime(1L, "Dragon Ball Z"), new Anime(2L, "Berserk"), new Anime(3L,"Boruto"))	
-	);
 	
-	// private final AnimeRepository animeRepository;
+	
+	private final AnimeRepository animeRepository;
 	
     public List<Anime> listAll() {
-        return animes;
+        return animeRepository.findAll();
     }
 
-	public Anime findById(long id) {
+	public Anime findByIdOrThrowBadRequestException(long id) {
 		
-		return animes.stream()
-				.filter(anime -> anime.getId().equals(id))
-				.findFirst()
+		return animeRepository
+				.findById(id)
 				.orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Anime not found!"));
 	}
 
-	public Anime save(Anime animeBody) {
-		//setando o id automaticamente do 4 ao 100.000
-		animeBody.setId(ThreadLocalRandom.current().nextLong(4, 100000));
-		animes.add(animeBody);
-		return animeBody;
+	public Anime save(AnimePostRequestBodyDTO animePostRequestBodyDTO) {
+		Anime anime = Anime.builder().name(animePostRequestBodyDTO.getName()).build();
+		animeRepository.save(anime);
+		return anime;
 	}
 	
 	public void delete(long id) {
-		Anime animeReturn = findById(id);
-		animes.remove(animeReturn);
+
+		animeRepository.delete(findByIdOrThrowBadRequestException(id));
 		
 	}
 
-	public void replace(Anime animeBody) {
+	public void replace(AnimePutRequestBodyDTO animePutRequestBodyDTO) {
+		// pegamos o id do antigo
+		Anime animeSalvo = findByIdOrThrowBadRequestException(animePutRequestBodyDTO.getId());
+		//com o id antigo setamos o novo nome de um modo mais seguro
+		Anime newAnime = Anime.builder().name(animePutRequestBodyDTO.getName()).id(animeSalvo.getId()).build();
 		
-		animes.removeIf(anime -> anime.getId().equals(animeBody.getId()));
-		
-		animes.add(animeBody);
+		animeRepository.save(newAnime);
 	}
 }

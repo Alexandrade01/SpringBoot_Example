@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import academy.devdojo.Myspringboot2essentials.domain.Anime;
+import academy.devdojo.Myspringboot2essentials.request.AnimePostRequestBodyDTO;
+import academy.devdojo.Myspringboot2essentials.request.AnimePutRequestBodyDTO;
 import academy.devdojo.Myspringboot2essentials.service.AnimeService;
 import academy.devdojo.Myspringboot2essentials.util.DateUtil;
 import lombok.RequiredArgsConstructor;
@@ -41,14 +43,14 @@ public class AnimeController {
     	
         log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
         
-        return new ResponseEntity<>(animeService.findById(id), HttpStatus.OK);
+        return new ResponseEntity<>(animeService.findByIdOrThrowBadRequestException(id), HttpStatus.OK);
         //return ResponseEntity.ok(animeService.ListAll)
     }
     
     @PostMapping
-    public ResponseEntity<Anime> save(@RequestBody Anime animeBody){
+    public ResponseEntity<Anime> save(@RequestBody AnimePostRequestBodyDTO animeBody){
     	
-    	// log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
+    	 log.info("Post no horario ->:" + dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
     	 
     	 return new ResponseEntity<>(animeService.save(animeBody),HttpStatus.CREATED);
     }
@@ -56,7 +58,7 @@ public class AnimeController {
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id){
     	
-    	log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
+    	log.info("Delete no horario ->:" +dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
     	log.info("Deleted Sucess!");
     	animeService.delete(id);
     	
@@ -64,9 +66,9 @@ public class AnimeController {
     }
     
     @PutMapping
-    public ResponseEntity<Void> replace(@RequestBody Anime animeBody){
+    public ResponseEntity<Void> replace(@RequestBody AnimePutRequestBodyDTO animeBody){
     	
-    	log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
+    	log.info("Put no horario ->:" +dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
     	animeService.replace(animeBody);
     	
     	return new ResponseEntity<>(HttpStatus.NO_CONTENT);
