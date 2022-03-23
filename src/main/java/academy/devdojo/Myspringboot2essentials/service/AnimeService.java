@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import academy.devdojo.Myspringboot2essentials.domain.Anime;
+import academy.devdojo.Myspringboot2essentials.exception.BadRequestException;
 import academy.devdojo.Myspringboot2essentials.repository.AnimeRepository;
 import academy.devdojo.Myspringboot2essentials.request.AnimePostRequestBodyDTO;
 import academy.devdojo.Myspringboot2essentials.request.AnimePutRequestBodyDTO;
@@ -28,7 +29,7 @@ public class AnimeService {
 		
 		return animeRepository
 				.findById(id)
-				.orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Anime not found!"));
+				.orElseThrow(() -> new BadRequestException("Anime not found!"));
 	}
 
 	public Anime save(AnimePostRequestBodyDTO animePostRequestBodyDTO) {
@@ -50,5 +51,10 @@ public class AnimeService {
 		Anime newAnime = Anime.builder().name(animePutRequestBodyDTO.getName()).id(animeSalvo.getId()).build();
 		
 		animeRepository.save(newAnime);
+	}
+	
+	public List<Anime> findByName(String name) {
+		
+		return animeRepository.findByName(name);
 	}
 }
