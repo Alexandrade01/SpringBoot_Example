@@ -44,9 +44,8 @@ public class AnimeService {
 	
 	@Transactional
 	public Anime save(AnimePostRequestBodyDTO animePostRequestBodyDTO) {
-		Anime anime = animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePostRequestBodyDTO));
-		animeRepository.save(anime);
-		return anime;
+		return animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePostRequestBodyDTO));
+		
 	}
 	
 	public void delete(long id) {
@@ -59,9 +58,10 @@ public class AnimeService {
 		// pegamos o id do antigo
 		Anime animeSalvo = findByIdOrThrowBadRequestException(animePutRequestBodyDTO.getId());
 		//com o id antigo setamos o novo nome de um modo mais seguro
-		Anime newAnime = Anime.builder().name(animePutRequestBodyDTO.getName()).id(animeSalvo.getId()).build();
-		
-		animeRepository.save(newAnime);
+		//Anime newAnime = Anime.builder().name(animePutRequestBodyDTO.getName()).id(animeSalvo.getId()).build();
+		Anime anime = AnimeMapper.INSTANCE.toAnime(animePutRequestBodyDTO);
+		anime.setId(animeSalvo.getId());
+		animeRepository.save(anime);
 	}
 	
 	public List<Anime> findByName(String name) {

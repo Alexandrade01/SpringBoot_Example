@@ -3,6 +3,8 @@ package academy.devdojo.Myspringboot2essentials.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -59,7 +61,7 @@ public class AnimeController {
     }
     
     @PostMapping
-    public ResponseEntity<Anime> save(@RequestBody AnimePostRequestBodyDTO animeBody){
+    public ResponseEntity<Anime> save(@RequestBody @Valid  AnimePostRequestBodyDTO animeBody){
     	
     	 log.info("Post no horario ->:" + dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
     	 
@@ -77,7 +79,7 @@ public class AnimeController {
     }
     
     @PutMapping
-    public ResponseEntity<Void> replace(@RequestBody AnimePutRequestBodyDTO animeBody){
+    public ResponseEntity<Void> replace(@RequestBody @Valid AnimePutRequestBodyDTO animeBody){
     	
     	log.info("Put no horario ->:" +dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
     	animeService.replace(animeBody);

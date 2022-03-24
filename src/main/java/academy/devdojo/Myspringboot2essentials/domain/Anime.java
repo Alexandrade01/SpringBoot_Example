@@ -24,7 +24,7 @@ public class Anime {
     private Long id;
     
     //jsonproperty é uma mascara para apresentar na saida
-    @JsonProperty("Nome do anime")
+   // @JsonProperty("Nome do anime")
     private String name;
 
 }
