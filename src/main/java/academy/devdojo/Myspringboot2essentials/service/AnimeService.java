@@ -2,12 +2,12 @@ package academy.devdojo.Myspringboot2essentials.service;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.transaction.annotation.Transactional;
 
 import academy.devdojo.Myspringboot2essentials.domain.Anime;
 import academy.devdojo.Myspringboot2essentials.exception.BadRequestException;
+import academy.devdojo.Myspringboot2essentials.mapper.AnimeMapper;
 import academy.devdojo.Myspringboot2essentials.repository.AnimeRepository;
 import academy.devdojo.Myspringboot2essentials.request.AnimePostRequestBodyDTO;
 import academy.devdojo.Myspringboot2essentials.request.AnimePutRequestBodyDTO;
@@ -31,9 +31,20 @@ public class AnimeService {
 				.findById(id)
 				.orElseThrow(() -> new BadRequestException("Anime not found!"));
 	}
-
-	public Anime save(AnimePostRequestBodyDTO animePostRequestBodyDTO) {
+	
+	/*@Transactional(rollbackFor = Exception.class)
+	public Anime save(AnimePostRequestBodyDTO animePostRequestBodyDTO) throws Exception {
 		Anime anime = Anime.builder().name(animePostRequestBodyDTO.getName()).build();
+		animeRepository.save(anime);
+		if(true) {
+			throw new Exception("Exception Test!");
+		}
+		return anime;
+	} */
+	
+	@Transactional
+	public Anime save(AnimePostRequestBodyDTO animePostRequestBodyDTO) {
+		Anime anime = animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePostRequestBodyDTO));
 		animeRepository.save(anime);
 		return anime;
 	}
