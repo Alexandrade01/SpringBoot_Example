@@ -55,7 +55,7 @@ public class AnimeController {
     //@GetMapping(path="/find/{name})"
  // metodo antigo ->  public ResponseEntity<List<Anime>> findById(@PathVariable String name)
     @GetMapping(path = "/find")  
-    public ResponseEntity<List<Anime>> findById(@RequestParam(required=false) String name, @RequestParam(required=true) long Id){
+    public ResponseEntity<List<Anime>> find(@RequestParam(required=true) String name){
         log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
         
         return new ResponseEntity<>(animeService.findByName(name), HttpStatus.OK);
