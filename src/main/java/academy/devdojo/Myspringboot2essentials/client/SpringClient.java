@@ -1,8 +1,5 @@
 package academy.devdojo.Myspringboot2essentials.client;
 
-import java.util.List;
-
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -18,30 +15,35 @@ public class SpringClient {
 
 	public static void main(String[] args) {
 
-		/*
-		 * ResponseEntity<Anime> entity = new
-		 * RestTemplate().getForEntity("http://localhost:8090/animes/4", Anime.class);
-		 * log.info(entity); ResponseEntity<Anime> entityByIdName = new
-		 * RestTemplate().getForEntity("http://localhost:8090/animes/{id}", Anime.class,
-		 * 2); log.info(entityByIdName);
-		 * 
-		 * Anime object = new
-		 * RestTemplate().getForObject("http://localhost:8090/animes/{id}", Anime.class,
-		 * 2); log.info(object);
-		 * 
-		 * 
-		 * Anime[] animesArray = new
-		 * RestTemplate().getForObject("http://localhost:8090/animes/all/",
-		 * Anime[].class); log.info(Arrays.toString(animesArray));
-		 */
+		// ResponseEntity<Anime> entity = new
+		// RestTemplate().getForEntity("http://localhost:8090/animes/4", Anime.class);
+		// log.info(entity);
+		// ResponseEntity<Anime> entityByIdName = new
+		// RestTemplate().getForEntity("http://localhost:8090/animes/{id}",
+		// Anime.class, 2);
+		// log.info(entityByIdName);
+		//
+		// Anime object = new
+		// RestTemplate().getForObject("http://localhost:8090/animes/{id}", Anime.class,
+		// 2);
+		// log.info(object);
+
+		// Anime[] animesArray = new
+		// RestTemplate().getForObject("http://localhost:8090/animes/all/",
+		// Anime[].class);
+		// log.info(Arrays.toString(animesArray));
 
 		// Utiliza o exchange quando precisamos de um retorno mais parametrizado
 		// conforme o projeto
 
-		ResponseEntity<List<Anime>> exchangeResponse = new RestTemplate().exchange("http://localhost:8090/animes/all",
-				HttpMethod.GET, null, new ParameterizedTypeReference<>() {
-				});
-		log.info(exchangeResponse.getBody());
+		/*
+		 * ResponseEntity<List<Anime>> exchangeResponse = new
+		 * RestTemplate().exchange("http://localhost:8090/animes/all", HttpMethod.GET,
+		 * null, new ParameterizedTypeReference<>() { });
+		 * log.info(exchangeResponse.getBody());
+		 */
+
+		// POST
 
 		// Post utilizando postForObject
 		// Anime MortalKombat = Anime.builder().name("Mortal Kombat").build();
@@ -50,12 +52,42 @@ public class SpringClient {
 		// Anime.class);
 		// log.info("saved anime {}", ReturnMortalKombat);
 
-		Anime Onimusha = Anime.builder().name("Onimusha").build();
+		/*
+		 * Anime Onimusha = Anime.builder().name("Onimusha").build();
+		 * 
+		 * ResponseEntity<Anime> responseOnimusha = new
+		 * RestTemplate().exchange("http://localhost:8090/animes/", HttpMethod.POST, new
+		 * HttpEntity<>(Onimusha, createJsonHeader()), Anime.class);
+		 * 
+		 * log.info("saved anime {}", responseOnimusha);
+		 */
 
-		ResponseEntity<Anime> responseOnimusha = new RestTemplate().exchange("http://localhost:8090/animes/",
-				HttpMethod.POST, new HttpEntity<>(Onimusha, createJsonHeader()), Anime.class);
+		// PUT
+
+		// fazendo update de onimusha
+
+		//ResponseEntity<Anime> entityOnimusha = new RestTemplate()
+		//		.getForEntity("http://localhost:8090/animes/find/{name}", Anime.class, "Onimusha");
+        //
+		//log.info(entityOnimusha.getBody());
+        //
+		//Anime newAnime = entityOnimusha.getBody();
+		//newAnime.setName("Onimusha Demons 3");
+        //
+		//ResponseEntity<Void> updateAnime = new RestTemplate().exchange("http://localhost:8090/animes/", HttpMethod.PUT,
+		//		new HttpEntity<>(newAnime, createJsonHeader()), Void.class);
+		//log.info(updateAnime);
+        //
+		// DELETE
 		
-		log.info("saved anime {}", responseOnimusha);
+		ResponseEntity<Anime> entityOnimusha = new RestTemplate()
+		.getForEntity("http://localhost:8090/animes/find/{name}", Anime.class, "Onimusha Demons 3");
+		
+		ResponseEntity<Void> onimusha3Deleted = new RestTemplate().exchange("http://localhost:8090/animes/{Id}",
+				HttpMethod.DELETE, null, Void.class, entityOnimusha.getBody().getId());
+
+		//log.info(onimusha3Deleted);
+
 	}
 
 	// quando criamos um httpEntity<> precisamos de um header e um body, aqui
