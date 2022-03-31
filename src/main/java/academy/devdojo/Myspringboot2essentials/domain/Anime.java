@@ -4,8 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotEmpty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +24,7 @@ public class Anime {
     
     //jsonproperty é uma mascara para apresentar na saida
    // @JsonProperty("Nome do anime")
+	@NotEmpty(message = "O nome do anime não pode ser vazio!")
     private String name;
 
 }

@@ -3,6 +3,8 @@ package academy.devdojo.Myspringboot2essentials.repository;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.ConstraintViolationException;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,11 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import academy.devdojo.Myspringboot2essentials.domain.Anime;
+import academy.devdojo.Myspringboot2essentials.util.AnimeCreator;
 
 @DataJpaTest
 @DisplayName("Testes para AnimeRepository")
 public class AnimeRepositoryTest {
-
+	
 	@Autowired
 	private AnimeRepository animeRepository;
 
@@ -22,7 +25,7 @@ public class AnimeRepositoryTest {
 	@DisplayName("Salvar crates quando o anime for criado com sucesso")
 	void save_PersistAnime_WhenSuccessful() {
 		// criamos um objeto anime teste
-		Anime animeSavetoTest = createTestAnime();
+		Anime animeSavetoTest = AnimeCreator.createAnimeToBeSaved();
 
 		// inserirmos no save do repositorio esse novo objeto
 		Anime animeSave = this.animeRepository.save(animeSavetoTest);
@@ -39,7 +42,7 @@ public class AnimeRepositoryTest {
 	@DisplayName("Salvar Updates quando o anime for atualizado com sucesso")
 	void save_UpdateAnime_WhenSuccessful() {
 		// criamos um objeto anime teste
-		Anime animeSavetoTest = createTestAnime();
+		Anime animeSavetoTest = AnimeCreator.createAnimeToBeSaved();
 
 		// inserirmos no save do repositorio esse novo objeto
 		Anime animeSave = this.animeRepository.save(animeSavetoTest);
@@ -60,7 +63,7 @@ public class AnimeRepositoryTest {
 	@DisplayName("Salvar Deletes quando o anime for deletado com sucesso")
 	void save_DeleteAnime_WhenSuccessful() {
 		// criamos um objeto anime teste
-		Anime animeSavetoTest = createTestAnime();
+		Anime animeSavetoTest = AnimeCreator.createAnimeToBeSaved();
 
 		// inserirmos no save do repositorio esse novo objeto
 		Anime animeSave = this.animeRepository.save(animeSavetoTest);
@@ -80,7 +83,7 @@ public class AnimeRepositoryTest {
 	@Test
 	@DisplayName("Find By Name retorna lista de animes quando volta com sucesso")
 	void findByName_ReturnsListOfAnime_WhenSuccessful() {
-		Anime animeToBeSaved = createTestAnime();
+		Anime animeToBeSaved =  AnimeCreator.createAnimeToBeSaved();
 
 		Anime animeSaved = this.animeRepository.save(animeToBeSaved);
 
@@ -100,15 +103,22 @@ public class AnimeRepositoryTest {
 	@DisplayName("Find By Name retorna vazio(empty) quando retorna com sucesso")
 	void findByName_ReturnsEmptyList_WhenAnimeIsNotFound() {
 		List<Anime> animes = this.animeRepository.findByName("Teste 01");
-		
-		//teste de retorno vazio
+
+		// teste de retorno vazio
 		Assertions.assertThat(animes).isEmpty();
 	}
 
-	// Anime criado para teste
-	private Anime createTestAnime() {
-
-		return Anime.builder().name("TEST").build();
+	@Test
+	@DisplayName("Save throw ConstraintViolationException quando o nome é vazio")
+	void save_ThrowsConstraintViolationException_WhenNameIsEmpty() {
+		Anime anime = new Anime();
+//	        Assertions.assertThatThrownBy(() -> this.animeRepository.save(anime))
+//	                .isInstanceOf(ConstraintViolationException.class);
+		
+		//Teste de exceção
+		Assertions.assertThatExceptionOfType(ConstraintViolationException.class)
+				.isThrownBy(() -> this.animeRepository.save(anime))
+				.withMessageContaining("O nome do anime não pode ser vazio!");
 	}
 
 }
